@@ -1,0 +1,117 @@
+﻿<Window x:Class="ApoObjectDetection.Gui.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:userControls="clr-namespace:ApoObjectDetection.Gui.UserControls"
+        mc:Ignorable="d"
+        Title="Apo object detection"
+        Width="1600"
+        Height="900">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <MenuItem Click="BtnOpenModel_OnClick" Header="Load model"/>
+            <MenuItem x:Name="BtnOpenImage" Click="BtnOpenImage_OnClick" IsEnabled="False" Header="Open image"/>
+            <MenuItem x:Name="BtnSave" Header="Save" IsEnabled="False" >
+                <MenuItem x:Name="BtnSaveImage" Click="BtnSaveImage_OnClick" Header="Save image"/>
+                <MenuItem x:Name="BtnSaveRectangles" Click="BtnSaveRctangles_OnClick"  Header="Save Rectangles"/>
+                <MenuItem x:Name="BtnSaveImageContours" Click="BtnSaveImageContours_OnClick"  Header="Save image with Contours"/>
+                <MenuItem x:Name="BtnSaveContours" Click="BtnSaveContours_OnClick" Header="Save Contours"/>
+            </MenuItem>
+            <MenuItem  Click="About_OnClick" Header="About"/>
+            <MenuItem Click="BtnDownloadLink_OnClick" Header="Get model"/>
+        </Menu>
+        <ScrollViewer x:Name="ScrollViewerSettings" Grid.Column="0" Grid.Row="1" IsEnabled="False">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock MinWidth="150">AdaptiveThreshold size:</TextBlock>
+                    <userControls:TextBoxInt x:Name="AdaptiveThresholdSize" Value="201" ValueChanged="AdaptiveThresholdSize_OnValueChanged" MinWidth="100"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock MinWidth="150">sure edge: </TextBlock>
+                    <userControls:TextBoxInt x:Name="SureEdge" Value="35" ValueChanged="SureNotEdge_OnValueChanged" MinWidth="100"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock MinWidth="150">Close: </TextBlock>
+                    <userControls:TextBoxInt x:Name="CloseSize" Value="4" ValueChanged="CloseSize_OnValueChanged" MinWidth="100"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock MinWidth="150">Low open: </TextBlock>
+                    <userControls:TextBoxInt x:Name="OpenSize" Value="3" ValueChanged="OpenSize_OnValueChanged" MinWidth="100"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock MinWidth="150">High open: </TextBlock>
+                    <userControls:TextBoxInt x:Name="Open2Size" Value="59" ValueChanged="Open2Size_OnValueChanged" MinWidth="100"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock MinWidth="150">Minimum rectangle size: </TextBlock>
+                    <userControls:TextBoxInt x:Name="MinRecArea" Value="50" ValueChanged="MinRecArea_OnValueChanged" MinWidth="100"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox MinWidth="150" IsChecked="True" Checked="ChbMerge_OnChecked" Unchecked="ToggleButton_OnUnchecked">Merge significantly intersecting rectangles</CheckBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock MinWidth="150">rectangle Thickness: </TextBlock>
+                    <userControls:TextBoxInt x:Name="RecThickness" Value="1" ValueChanged="RecThickness_OnValueChanged" MinWidth="100"/>
+                </StackPanel>
+                <Separator/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock MinWidth="150">rectangle Color: </TextBlock>
+                    <StackPanel>
+                        <userControls:TextBoxInt x:Name="RectangleColorR" Value="255" ValueChanged="RectangleColorR_OnValueChanged" MinWidth="100"/>
+                        <userControls:TextBoxInt x:Name="RectangleColoG" Value="0" ValueChanged="RectangleColoG_OnValueChanged" MinWidth="100"/>
+                        <userControls:TextBoxInt x:Name="RectangleColoB" Value="0" ValueChanged="RectangleColoB_OnValueChanged" MinWidth="100"/>
+                    </StackPanel>
+                </StackPanel>
+                <Button Click="BtnSetup_OnClick">Setup wizard</Button>
+            </StackPanel>
+        </ScrollViewer>
+        <Image x:Name="Img" Grid.Column="1" Grid.Row="1"/>
+        <Grid x:Name="SpSteps" Grid.Column="1" Grid.Row="1" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Blurred image:"/>
+            <Image Grid.Row="1" Grid.Column="0" MaxHeight="400" x:Name="ImgBlur"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="Detected Edges:"/>
+            <Image Grid.Row="1" Grid.Column="1" MaxHeight="400" x:Name="ImgDetector"/>
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="Edges mask:"/>
+            <Image Grid.Row="1" Grid.Column="2" MaxHeight="400" x:Name="ImgSureEdges"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Adaptive threshold:"/>
+            <Image  Grid.Row="3" Grid.Column="0" MaxHeight="400" x:Name="ImgAdaptiveThreshold"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="Morphology close:"/>
+            <Image  Grid.Row="3" Grid.Column="1" MaxHeight="400" x:Name="ImgClosedAdaptiveWithEdges"/>
+            <TextBlock Grid.Row="2" Grid.Column="2" Text="Morphology open small:"/>
+            <Image  Grid.Row="3" Grid.Column="2" MaxHeight="400" x:Name="ImgOpenSmalldAdaptiveWithEdges"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Morphology open big:"/>
+            <Image Grid.Row="5" Grid.Column="0"  MaxHeight="400" x:Name="ImgOpenBigdAdaptiveWithEdges"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="Contours:"/>
+            <Image  Grid.Row="5" Grid.Column="1"  MaxHeight="400" x:Name="ImgContours"/>
+            <TextBlock Grid.Row="4" Grid.Column="2" Text="Result:"/>
+            <Image x:Name="ImgRes" Grid.Column="2" Grid.Row="5" Source="{Binding ElementName=Img, Path=Source}"/>
+        </Grid>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right" IsEnabled="{Binding ElementName=ScrollViewerSettings, Path=IsEnabled}">
+            
+            <CheckBox x:Name="ChbStep" Checked="ToggleButtonSteps_OnChecked" Unchecked="ToggleButtonSteps_OnUnchecked">Show all steps</CheckBox>
+        </StackPanel>
+    </Grid>
+</Window>
